@@ -20,27 +20,11 @@ const initialTasks = [
   },
 ];
 
-//why do we need to pass both task and index? 
-// VV this is the map callback function. map will pass an array, index, and something else, but we dont need to use it
-function mapTasktoTaskComponent(task, index) {
-  return (
-    <div className={`${task.completed ? "bg-green-200 border border-green-500" : "bg-white border border-black"} p-4 m-2 max-w-sm flex align-center rounded-md`}>
-      <button className={`${task.completed ? "bg-green-800 border border-green-900" : "bg-white border border-black"} h-4 w-4 border border-black rounded-sm mr-4`}></button>
-      <div>
-        <div>
-          {task.title}
-        </div>
-        <div className="text-gray-400">
-          {task.description}
-        </div>
-      </div>
-    </div>
-  )
-}
+
 
 //map takes callback function (equivalent to foreach)
 function TaskList() {
-  // This is a destructuring and it's how useState returns it's arguments
+  // This is a destructuring and it's how useState returns its arguments
   // useState returns an array, where the first value is the state and the second
   // value is a function that sets the state to a new value
   const [tasks, setTasks] = useState(initialTasks)
@@ -52,7 +36,7 @@ function TaskList() {
     const oldTask = tasks[index];
 
     // create a new task that is the same as the old task, but a different state
-    // The spread operator copies all of the key value pairs from the old task to the new task
+    // ... The spread operator copies all of the key value pairs from the old task to the new task
     const newTask = { ...oldTask, completed: !oldTask.completed }
 
     // replace the old task with the new task - make a new list of tasks with the updated task (newTask)
@@ -60,14 +44,29 @@ function TaskList() {
       // if it's the old task (the index matches idx)
       if (idx === index) {
         return newTask
-      }
-      return task
+      } else
+        return task
     })
-
-
     // update the state (tasks) - THIS NEEDS A NEW LIST OF TASKS
     setTasks(newTasklist)
+  }
 
+  //why do we need to pass both task and index? 
+  // VV this is the map callback function. map will pass an array, index, and something else, but we dont need to use it
+  function mapTasktoTaskComponent(task, index: number) {
+    return (
+      <div className={`${task.completed ? "bg-green-200 border border-green-500" : "bg-white border border-black"} p-4 m-2 max-w-sm flex align-center rounded-md`}>
+        <button onClick={() => toggleTask(index)} className={`${task.completed ? "bg-green-800 border border-green-900" : "bg-white border border-black"} h-4 w-4 border border-black rounded-sm mr-4`}></button>
+        <div>
+          <div>
+            {task.title}
+          </div>
+          <div className="text-gray-400">
+            {task.description}
+          </div>
+        </div>
+      </div>
+    )
   }
 
 
@@ -77,11 +76,7 @@ function TaskList() {
       display: "flex",
       flexDirection: "column"
     }}>
-      {tasks.map(
-        (task, index) => {
-          return <button onClick={() => toggleTask(index)}>{JSON.stringify(task)}</button>
-        }
-      )}
+      {tasks.map(mapTasktoTaskComponent)}
     </div>
   )
 }
